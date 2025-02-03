@@ -1,7 +1,7 @@
 import json
 import logging
 import requests
-import errors
+from . import errors
 
 
 class DeepSeek:
@@ -197,18 +197,34 @@ class DeepSeek:
         :return: chat_session_id (失败时返回None)
         """
         headers = {
-            "Accept": "*/*",
-            "Accept-Encoding": "gzip, deflate, br, zstd",
-            "accept-Language": "zh-CN,zh;q=0.9",
-            "Authorization": f"Bearer {self.Authorization}",
+            "Host": "chat.deepseek.com",
+            "Connection": "keep-alive",
             "Content-Length": "21",
+            "sec-ch-ua": "\"Chromium\";v=\"130\", \"Google Chrome\";v=\"130\", \"Not?A_Brand\";v=\"99\"",
+            "X-Client-Locale": "zh_CN",
+            "X-Client-Version": "1.0.0-always",
+            "sec-ch-ua-mobile": "?0",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+            "X-App-Version": "20241129.1",
             "Content-Type": "application/json",
-            "Cookie": "_frid=f8b02169a1064443b962c11fa1023b97; smidV2=20241122210214b9bc8e84344a93940417c8981f8e44d400cf385ff445c67b0; .thumbcache_6b2e5483f9d858d7c661c5e276b6a6ae=iRdk/ku4gb6rTisxOtqmwINleB2NsmXwpjSK6Mk0VhO+7lmHL7+6gaPBv+lfuBaQWstXoYRn499FcFheBm1FzA%3D%3D; intercom-device-id-guh50jw4=f65708c1-cb3f-4024-b5f9-7037e504e671; Hm_lvt_fb5acee01d9182aabb2b61eb816d24ff=1737871717; HMACCOUNT=3C97D9DC9C81F247; HWWAFSESTIME=1737871716496; HWWAFSESID=fd37e4eab767365c0a1; ds_session_id=8fba8eab5d074f55b7b0fa40668b9c58; Hm_lvt_1fff341d7a963a4043e858ef0e19a17c=1737871718; Hm_lpvt_fb5acee01d9182aabb2b61eb816d24ff=1738481649; Hm_lpvt_1fff341d7a963a4043e858ef0e19a17c=1738496322; intercom-session-guh50jw4=TENNNW5qMFlvdVFNRXZYNVZrYkhwSjFmc2twZ2krc0FnUGdXQUo4eHZHN0wyOWNpdW5qcUpzVml1N0g3clpKbXlSV0h0RFpKOGJGeW44T0JBYjJzZFpscHlhMVlNZUJEdkU5M2FGa3NxNFk9LS1nK1NnbkVwNXZ5NWtjSzB6T3A0L1h3PT0=--4ff93d6417463b9cff7f27dca6a9e68d5bb008fe",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "Accept": "*/*",
             "Origin": "https://chat.deepseek.com",
-            "Priority": "u=1, i",
+            "Sec-Fetch-Site": "same-origin",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Dest": "empty",
             "Referer": "https://chat.deepseek.com/",
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-        }
+            "Accept-Encoding": "gzip, deflate, br, zstd",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Cookie": self.cookies,
+            "Authorization": f"Bearer {self.Authorization}",
+            "X-Client-Platform": "web",
+            "Priority": "u=1, i",
+            "sec-ch-ua-arch": "\"x86\"",
+            "sec-ch-ua-bitness": "\"64\"",
+            "sec-ch-ua-full-version": "\"130.0.6723.70\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\""
+}
 
         payload = {"character_id": character_id}
 
