@@ -21,10 +21,18 @@ pip install DeepSeekfree
 ## 第一步获取token 和 cookie
 使用之前,前往DeepSeek官网获取token 和 cookie.
 #### 获取token:
+F12 或者 右键->检查打开控制台
 
+<p align="center">
+  <img src="https://github.com/danel-phang/DeepSeek-free/blob/main/images/token.png" alt="token">
+</p>
 
 ### 获取cookie
 
+F12 或者 右键->检查打开控制台
+<p align="center">
+  <img src="https://github.com/danel-phang/DeepSeek-free/blob/main/images/cookie.png" alt="cookie">
+</p>
 
 
 ## 🚀 快速开始
