@@ -2,6 +2,7 @@ import json
 import logging
 import requests
 from . import errors
+from .pow import DeepSeekPOW
 
 
 class DeepSeek:
@@ -30,6 +31,8 @@ class DeepSeek:
     search_enabled: bool = False
     """Online search enabled"""
 
+    pow_path = "/api/v0/chat/completion"
+
     def __init__(
             self,
             cookies: str = "",
@@ -42,7 +45,6 @@ class DeepSeek:
         
         if Authorization:
             self.Authorization = Authorization
-
 
 
         logging.debug(self.cookies)
@@ -58,8 +60,39 @@ class DeepSeek:
             "Origin": "https://chat.deepseek.com",
             "Referer": "https://chat.deepseek.com/",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-            "X-DS-POW-Response": "eyJhbGdvcml0aG0iOiJEZWVwU2Vla0hhc2hWMSIsImNoYWxsZW5nZSI6IjQyNTc5YTk3ZGEwNDE2ODQyMmIzNWM4YzUzOTAyOTk0OTU5ZDUwNmMzZWRjYzVmODY4MjE3NzliNDJiYTkwZjkiLCJzYWx0IjoiNGY5MTA4NzlkMTgyYjEzZTIxYTgiLCJhbnN3ZXIiOjg0MDAxLCJzaWduYXR1cmUiOiIzM2RjNmQ4YTYxMTc1Yjk1MjZiNzFkOTA2NTJkNjBlNGYxMjRiN2UzM2UxNTI0NGMyYTE1NWQyZmQ5MWI4NzBlIiwidGFyZ2V0X3BhdGgiOiIvYXBpL3YwL2NoYXQvY29tcGxldGlvbiJ9"
+            "X-DS-POW-Response": self.__pow_challenge()
         }
+
+    def __pow_challenge(self) -> str:
+        url = self.api_base + "/api/v0/chat/create_pow_challenge"
+        response = requests.post(
+            url,
+            headers={
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate, br, zstd",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Authorization": f"Bearer {self.Authorization}",
+            "Content-Length": "167",
+            "Content-Type": "application/json",
+            "Cookie": self.cookies,
+            "Origin": "https://chat.deepseek.com",
+            "Referer": "https://chat.deepseek.com/",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+            
+        },
+            json={
+                "target_path": self.pow_path,
+            }
+        )
+        if response.status_code == 200:
+            res = response.json()
+            challenge = res.get("data").get("biz_data").get("challenge")
+            answer = DeepSeekPOW().solve_challenge(challenge)
+            print(answer)
+            return answer
+        else:
+            raise errors.DeepSeekErrors(f"unexpected response: {response.text}")
+        
 
     def _streaming(
             self,
@@ -78,7 +111,6 @@ class DeepSeek:
             parent_id (str, optional): 父消息id. Defaults to None.
             chat_session_id (str, optional): 对话id. Defaults to "".
             timeout (int, optional): 超时时间. Defaults to 60.
-            image (bytes, optional): 图片二进制数据. Defaults to None.
         """
         if parent_id == None:
             self.parent_id = self.parent_id
@@ -148,7 +180,6 @@ class DeepSeek:
             parent_id (str, optional): 父消息id. Defaults to None.
             chat_session_id (str, optional): 对话id. Defaults to "".
             timeout (int, optional): 超时时间. Defaults to 60.
-            image (bytes, optional): 图片二进制数据. Defaults to None.
         """
         thinking_content = ""
         text_content = ""
@@ -199,7 +230,7 @@ class DeepSeek:
         headers = {
             "Host": "chat.deepseek.com",
             "Connection": "keep-alive",
-            "Content-Length": "21",
+            "Content-Length": "42",
             "sec-ch-ua": "\"Chromium\";v=\"130\", \"Google Chrome\";v=\"130\", \"Not?A_Brand\";v=\"99\"",
             "X-Client-Locale": "zh_CN",
             "X-Client-Version": "1.0.0-always",
@@ -234,7 +265,7 @@ class DeepSeek:
                 headers=headers,
                 json=payload
             )
-            response.raise_for_status()  # 检查HTTP错误状态码
+            response.raise_for_status()  
             response_data = response.json()
             return response_data["data"]["biz_data"]["id"]
         except requests.exceptions.RequestException as e:
@@ -246,6 +277,7 @@ class DeepSeek:
         except Exception as e:
             print(f"发生未知错误: {str(e)}")
             return None
+
 
 
     def chat(
