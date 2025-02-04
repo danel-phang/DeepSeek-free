@@ -5,11 +5,15 @@ Free API for interacting with DeepSeek, supporting V3 and R1 models, streaming r
 
 ## ✨ Features
 
-- 🔄 **Streaming Response**: Optional real-time streaming output
-- 🤔 **Thought Process**: Visualize model's reasoning chain
-- 🔍 **Web Search**: Optional internet integration for latest information
-- 💬 **Session Management**: Persistent chat sessions with history, session listing, and deletion
-- 📜 **Message History**: Retrieve historical messages from specific sessions
+
+| **Core Feature**       | **Description**                                                                 |
+|------------------------|---------------------------------------------------------------------------------|
+| **Streaming Response** | Supports real-time data streaming with optional enable/disable mode for stream output. |
+| **Thought Process**    | Visualizes the AI's reasoning logic chain for transparent decision-making.      |
+| **Web Search**         | Smart web-integrated module for real-time internet information retrieval.       |
+| **Session Management** | Cloud-based conversation archives with cross-device sync, batch deletion, and tag management. |
+| **History Retrieval**  | Retrieves full conversation records via session ID.                             |
+
 
 ## Installation
 
